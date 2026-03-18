@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ömer | Elite Garage v3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ff1f1f; /* Daha parlak bir kırmızı */
+            --bg: #050505; /* Derin siyah */
+            --card: #111111; /* Kart arka planı */
+            --text: #ffffff; /* Beyaz yazı */
+            --muted: #888888; /* Silik yazı */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Instagram Tag --- */
+        .user-tag {
+            position: fixed; top: 25px; left: 25px; z-index: 1000;
+        }
+        .user-tag a {
+            text-decoration: none; color: #fff; background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px); padding: 12px 25px; border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1); font-weight: 700;
+            display: flex; align-items: center; gap: 10px; transition: 0.3s;
+        }
+        .user-tag a:hover { 
+            background: var(--primary); 
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 31, 31, 0.3);
+        }
+
+        header {
+            height: 40vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, var(--bg) 100%);
+            text-align: center;
+        }
+        header h1 { font-size: clamp(2rem, 8vw, 4rem); font-weight: 800; text-transform: uppercase; }
+        header p { color: var(--primary); letter-spacing: 10px; font-size: 0.8rem; text-transform: uppercase; }
+
+        nav {
+            background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(15px);
+            padding: 20px; position: sticky; top: 0; z-index: 999;
+            display: flex; justify-content: center; gap: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        nav a { color: var(--muted); text-decoration: none; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; transition: 0.3s; cursor: pointer; }
+        nav a:hover { color: #fff; text-shadow: 0 0 10px var(--primary); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+        /* --- Kartlar --- */
+        .card {
+            background: var(--card); border-radius: 25px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.03); transition: 0.5s;
+            position: relative; cursor: pointer;
+        }
+        .card:hover { 
+            transform: translateY(-10px); 
+            border-color: var(--primary); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
+        }
+
+        .img-box { height: 250px; overflow: hidden; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; filter: brightness(0.9); }
+        .card:hover .img-box img { transform: scale(1.1) rotate(2deg); filter: brightness(1.1); }
+
+        .card-content { padding: 30px; }
+        .card-content h3 { font-size: 1.4rem; margin-bottom: 8px; font-weight: 800; }
+        .card-content p { color: var(--muted); font-size: 0.9rem; margin-bottom: 10px; }
+
+        /* YENİ: CSS ile güzelleştirme dokunuşu - Hover etiketi */
+        .card-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: #fff; padding: 20px; font-weight: 700; font-size: 0.8rem; transform: translateY(100%); transition: 0.4s; text-align: center; text-transform: uppercase; letter-spacing: 2px;
+        }
+        .card:hover .card-overlay { transform: translateY(0); }
+
+        /* --- Modallar --- */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 2000;
+            align-items: center; justify-content: center; backdrop-filter: blur(15px);
+            padding: 20px;
+        }
+        .modal-box {
+            background: #111; padding: 40px; border-radius: 30px;
+            text-align: center; border: 1px solid var(--primary);
+            width: 100%; max-width: 500px; position: relative;
+        }
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--muted); }
+        .close-btn:hover { color: #fff; }
+
+        .info-stat { display: flex; justify-content: space-around; margin-top: 25px; border-top: 1px solid #222; padding-top: 20px; }
+        .stat-item { text-align: center; }
+        .stat-item span { display: block; color: var(--primary); font-weight: 800; font-size: 1.2rem; }
+        .stat-item label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; }
+
+        footer { padding: 60px; text-align: center; color: #222; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+
+    <div class="user-tag">
+        <a href="https://instagram.com/om3rfyc" target="_blank"><i class="fab fa-instagram"></i> @om3rfyc</a>
+    </div>
+
+    <header>
+        <h1>ÖMER'S GARAGE</h1>
+        <p>SELECTIVE COLLECTION</p>
+    </header>
+
+    <nav>
+        <a href="#">Showroom</a>
+        <a onclick="openAbout()">Hakkımızda</a>
+        <a onclick="openContact()">İletişim</a>
+    </nav>
+
+    <div class="container">
+        <div class="grid">
+            <div class="card" onclick="openCar('BMW M4 Competition', 'Alman mühendisliğinin en keskin hali. Pist hissi.', '510 HP', '3.9s', '290 KM/H')">
+                <div class="img-box"><img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800" alt="BMW M4"></div>
+                <div class="card-content"><h3>BMW M4</h3><p>M TwinPower Turbo.</p></div>
+                <div class="card-overlay">Detayları Gör</div>
+            </div>
+
+            <div class="card" onclick="openCar('Mercedes-AMG GT', 'Lüks ve gücün asil buluşması. V8 senfonisi.', '530 HP', '3.8s', '312 KM/H')">
+                <div class="img-box"><img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800" alt="Mercedes AMG GT"></div>
+                <div class="card-content"><h3>Mercedes AMG GT</h3><p>El Yapımı Motor.</p></div>
+                <div class="card-overlay">Detayları Gör</div>
+            </div>
+
+            <div class="card" onclick="openCar('Audi R8 V10 Performance', 'Atmosferik V10 motorun efsanevi sesi ve Quattro güveni.', '620 HP', '3.1s', '331 KM/H')">
+                <div class="img-box"><img src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?w=800" alt="Audi R8"></div>
+                <div class="card-content"><h3>Audi R8 V10</h3><p>Atmosferik Güç.</p></div>
+                <div class="card-overlay">Detayları Gör</div>
+            </div>
+
+            <div class="card" onclick="openCar('Peugeot 508 PSE', 'Peugeot Sport Engineered tarafından geliştirilen 4x4 hibrit canavar.', '360 HP', '5.2s', '250 KM/H')">
+                <div class="img-box">
+                    <img src="https://www.carenthusiast.com/peugeot/peugeot__508__2024__011.jpg" alt="Peugeot 508 PSE New Model">
+                </div>
+                <div class="card-content"><h3>Peugeot 508 PSE</h3><p>Hibrit Performans.</p></div>
+                <div class="card-overlay">Detayları Gör</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="aboutModal" class="modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeAll()">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 15px;">HAKKIMIZDA</h2>
+            <p>Ben Ömer, bu site hala gelişme aşamasında. Bize fikir sunmak için <b>@om3rfyc</b> hesabına yazabilirsiniz.</p>
+        </div>
+    </div>
+
+    <div id="carModal" class="modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeAll()">&times;</span>
+            <h2 id="modalTitle" style="color: var(--primary); margin-bottom: 10px;"></h2>
+            <p id="modalDesc" style="font-size: 0.95rem; margin-bottom: 20px;"></p>
+            <div class="info-stat">
+                <div class="stat-item"><span id="statPower"></span><label>Güç</label></div>
+                <div class="stat-item"><span id="statZero"></span><label>0-100</label></div>
+                <div class="stat-item"><span id="statSpeed"></span><label>Max Hız</label></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contactModal" class="modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeAll()">&times;</span>
+            <h2>İLETİŞİM</h2>
+            <a href="https://instagram.com/om3rfyc" target="_blank" style="display:block; background:#1a1a1a; color:#fff; padding:15px; margin-top:20px; text-decoration:none; border-radius:15px;">@om3rfyc</a>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 ÖMER SELECT GARAGE</footer>
+
+    <script>
+        function openAbout() { document.getElementById('aboutModal').style.display = 'flex'; }
+        function openContact() { document.getElementById('contactModal').style.display = 'flex'; }
+        
+        function openCar(name, desc, power, zero, speed) {
+            document.getElementById('modalTitle').innerText = name;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('statPower').innerText = power;
+            document.getElementById('statZero').innerText = zero;
+            document.getElementById('statSpeed').innerText = speed;
+            document.getElementById('carModal').style.display = 'flex';
+        }
+
+        function closeAll() {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        }
+
+        window.onclick = function(e) {
+            if (e.target.className === 'modal') closeAll();
+        }
+    </script>
+</body>
+</html>
