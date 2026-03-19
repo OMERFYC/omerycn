@@ -3,212 +3,831 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ömer | Elite Garage v3</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <title>YAZILIM DÜNYASI | Geleceğini Kodla</title>
     <style>
-        :root {
-            --primary: #ff1f1f; /* Daha parlak bir kırmızı */
-            --bg: #050505; /* Derin siyah */
-            --card: #111111; /* Kart arka planı */
-            --text: #ffffff; /* Beyaz yazı */
-            --muted: #888888; /* Silik yazı */
+        /* --- TEMEL AYARLAR VE SIFIRLAMA --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            scroll-behavior: smooth;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* --- Instagram Tag --- */
-        .user-tag {
-            position: fixed; top: 25px; left: 25px; z-index: 1000;
-        }
-        .user-tag a {
-            text-decoration: none; color: #fff; background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px); padding: 12px 25px; border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1); font-weight: 700;
-            display: flex; align-items: center; gap: 10px; transition: 0.3s;
-        }
-        .user-tag a:hover { 
-            background: var(--primary); 
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255, 31, 31, 0.3);
+        /* --- GİRİŞ ANİMASYONU (LOADER) --- */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            animation: fadeOutLoader 1s forwards 3s;
         }
 
+        .loader-logo {
+            font-size: clamp(2rem, 10vw, 4rem);
+            font-weight: 900;
+            letter-spacing: 15px;
+            text-transform: uppercase;
+            color: #ff0000;
+            text-shadow: 0 0 15px #ff0000, 0 0 40px #ff0000;
+            opacity: 0;
+            animation: fadeInScale 1.5s ease-out forwards 0.5s;
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeOutLoader {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-100%); visibility: hidden; }
+        }
+
+        /* --- ANA İÇERİK SARMALAYICI --- */
+        .wrapper {
+            opacity: 0;
+            animation: fadeInContent 1s forwards 3.5s;
+        }
+
+        @keyframes fadeInContent {
+            to { opacity: 1; }
+        }
+
+        /* --- HEADER VE NAVİGASYON --- */
         header {
-            height: 40vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            background: radial-gradient(circle at center, #1a1a1a 0%, var(--bg) 100%);
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            background: linear-gradient(to bottom, #1a0000, transparent);
+            border-bottom: 1px solid #111;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-logo {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 0 10px #ff0000;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* Masaüstü Menü */
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .nav-menu a:hover {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        /* Hamburger İkonu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1100;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 30px;
+            height: 3px;
+            background: #ff0000;
+            box-shadow: 0 0 10px #ff0000;
+            transition: 0.4s;
+            border-radius: 2px;
+        }
+
+        /* Mobil Görünüm Ayarları */
+        @media (max-width: 1100px) {
+            .hamburger { display: flex; }
+            .brand-logo { font-size: 1.5rem; }
+            
+            .nav-menu {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                width: 80%;
+                height: 100vh;
+                background: rgba(10, 0, 0, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: 0.5s ease;
+                border-left: 2px solid #ff0000;
+            }
+
+            .nav-menu.active { right: 0; }
+            .nav-menu a { font-size: 1.5rem; margin: 15px 0; }
+
+            .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(7px, 6px); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+        }
+
+        /* --- HERO BÖLÜMÜ --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at center, #100000 0%, #000 100%);
         }
-        header h1 { font-size: clamp(2rem, 8vw, 4rem); font-weight: 800; text-transform: uppercase; }
-        header p { color: var(--primary); letter-spacing: 10px; font-size: 0.8rem; text-transform: uppercase; }
 
-        nav {
-            background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(15px);
-            padding: 20px; position: sticky; top: 0; z-index: 999;
-            display: flex; justify-content: center; gap: 40px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            margin-bottom: 20px;
+            font-weight: 900;
+            background: linear-gradient(45deg, #fff, #ff0000, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
         }
-        nav a { color: var(--muted); text-decoration: none; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; transition: 0.3s; cursor: pointer; }
-        nav a:hover { color: #fff; text-shadow: 0 0 10px var(--primary); }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .hero p {
+            font-size: 1.2rem;
+            color: #888;
+            max-width: 750px;
+            margin-bottom: 40px;
+        }
 
-        /* --- Kartlar --- */
+        .btn-main {
+            padding: 20px 50px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #fff;
+            background: #ff0000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            transition: 0.4s;
+            text-decoration: none;
+        }
+
+        .btn-main:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 40px #fff;
+            transform: translateY(-5px);
+        }
+
+        /* --- ANA SAYFA İÇERİK ALANI --- */
+        #ana-sayfa, #kod-arsivi {
+            padding: 120px 20px;
+            background-color: #050505;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #ff0000;
+            font-weight: 800;
+            letter-spacing: 5px;
+        }
+
+        /* --- KARTLAR (CARDS) --- */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1300px;
+            width: 100%;
+        }
+
         .card {
-            background: var(--card); border-radius: 25px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.03); transition: 0.5s;
-            position: relative; cursor: pointer;
+            background: #0c0c0c;
+            border: 1px solid #222;
+            padding: 50px 30px;
+            text-align: center;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.5s;
         }
-        .card:hover { 
-            transform: translateY(-10px); 
-            border-color: var(--primary); 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
+
+        .card:hover {
+            border-color: #ff0000;
+            transform: translateY(-15px);
+            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.2);
+            background: #110000;
         }
 
-        .img-box { height: 250px; overflow: hidden; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; filter: brightness(0.9); }
-        .card:hover .img-box img { transform: scale(1.1) rotate(2deg); filter: brightness(1.1); }
+        .card .icon { font-size: 4rem; margin-bottom: 25px; display: block; }
+        .card h3 { font-size: 1.6rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .card p { color: #777; font-size: 1rem; }
 
-        .card-content { padding: 30px; }
-        .card-content h3 { font-size: 1.4rem; margin-bottom: 8px; font-weight: 800; }
-        .card-content p { color: var(--muted); font-size: 0.9rem; margin-bottom: 10px; }
-
-        /* YENİ: CSS ile güzelleştirme dokunuşu - Hover etiketi */
-        .card-overlay {
-            position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            color: #fff; padding: 20px; font-weight: 700; font-size: 0.8rem; transform: translateY(100%); transition: 0.4s; text-align: center; text-transform: uppercase; letter-spacing: 2px;
+        /* --- KOD ARŞİVİ TASARIMI --- */
+        .archive-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 1000px;
         }
-        .card:hover .card-overlay { transform: translateY(0); }
 
-        /* --- Modallar --- */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 2000;
-            align-items: center; justify-content: center; backdrop-filter: blur(15px);
+        .archive-item {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .archive-item h4 { color: #ff0000; font-size: 1.6rem; margin-bottom: 15px; border-bottom: 1px solid #300; padding-bottom: 10px; }
+        
+        .code-box {
+            background: #080808;
+            border: 1px solid #333;
             padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            position: relative;
         }
-        .modal-box {
-            background: #111; padding: 40px; border-radius: 30px;
-            text-align: center; border: 1px solid var(--primary);
-            width: 100%; max-width: 500px; position: relative;
+
+        .code-box pre {
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--muted); }
-        .close-btn:hover { color: #fff; }
 
-        .info-stat { display: flex; justify-content: space-around; margin-top: 25px; border-top: 1px solid #222; padding-top: 20px; }
-        .stat-item { text-align: center; }
-        .stat-item span { display: block; color: var(--primary); font-weight: 800; font-size: 1.2rem; }
-        .stat-item label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; }
+        .copy-btn {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-        footer { padding: 60px; text-align: center; color: #222; font-size: 0.7rem; }
+        /* --- MODAL (BİLGİ PENCERELERİ) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            backdrop-filter: blur(15px);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: #080808;
+            margin: 50px auto;
+            padding: 50px;
+            border: 1px solid #ff0000;
+            width: 90%;
+            max-width: 1000px;
+            border-radius: 25px;
+            position: relative;
+            box-shadow: 0 0 60px rgba(255, 0, 0, 0.4);
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 30px;
+            top: 20px;
+            font-size: 50px;
+            color: #ff0000;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-h2 {
+            font-size: 2.5rem;
+            color: #ff0000;
+            text-align: center;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .info-item {
+            background: #111;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #ff0000;
+        }
+
+        .info-item h4 { color: #ff0000; margin-bottom: 15px; font-size: 1.3rem; text-transform: uppercase; }
+        .info-item p { font-size: 1rem; color: #bbb; line-height: 1.6; }
+
+        .lang-section {
+            margin-top: 40px;
+            text-align: center;
+            padding: 30px;
+            background: #0c0c0c;
+            border-radius: 20px;
+        }
+
+        .tags {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .tags span {
+            background: #ff0000;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: 900;
+            font-size: 0.9rem;
+        }
+
+        /* --- YOLUMU ÇİZ (QUIZ) --- */
+        .quiz-wrapper {
+            margin-top: 80px;
+            width: 100%;
+            max-width: 1300px;
+            background: linear-gradient(135deg, #200000, #000, #150000);
+            border: 3px dashed #ff0000;
+            padding: 60px 40px;
+            border-radius: 30px;
+            text-align: center;
+            transition: 0.5s;
+        }
+
+        .q-text { font-size: 1.8rem; margin-bottom: 30px; color: #fff; font-weight: 800; border-bottom: 2px solid #ff0000; padding-bottom: 10px; }
+        .option-list { display: flex; flex-direction: column; gap: 15px; max-width: 800px; margin: 0 auto; text-align: left; }
+        .option-item { background: #111; border: 1px solid #333; padding: 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; font-size: 1.1rem; color: #ccc; }
+        .option-item:hover { background: #250000; border-color: #ff0000; color: #fff; transform: translateX(10px); }
+
+        #result-box { display: none; padding: 40px; border: 2px solid #ff0000; border-radius: 20px; background: #0a0a0a; animation: fadeIn 1s; }
     </style>
 </head>
 <body>
 
-    <div class="user-tag">
-        <a href="https://instagram.com/om3rfyc" target="_blank"><i class="fab fa-instagram"></i> @om3rfyc</a>
+    <div id="loader">
+        <div class="loader-logo">YAZILIM DÜNYASI</div>
     </div>
 
-    <header>
-        <h1>ÖMER'S GARAGE</h1>
-        <p>SELECTIVE COLLECTION</p>
-    </header>
-
-    <nav>
-        <a href="#">Showroom</a>
-        <a onclick="openAbout()">Hakkımızda</a>
-        <a onclick="openContact()">İletişim</a>
-    </nav>
-
-    <div class="container">
-        <div class="grid">
-            <div class="card" onclick="openCar('BMW M4 Competition', 'Alman mühendisliğinin en keskin hali. Pist hissi.', '510 HP', '3.9s', '290 KM/H')">
-                <div class="img-box"><img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800" alt="BMW M4"></div>
-                <div class="card-content"><h3>BMW M4</h3><p>M TwinPower Turbo.</p></div>
-                <div class="card-overlay">Detayları Gör</div>
+    <div class="wrapper">
+        <header>
+            <div class="brand-logo" onclick="window.scrollTo(0,0)">YAZILIM DÜNYASI</div>
+            
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
 
-            <div class="card" onclick="openCar('Mercedes-AMG GT', 'Lüks ve gücün asil buluşması. V8 senfonisi.', '530 HP', '3.8s', '312 KM/H')">
-                <div class="img-box"><img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800" alt="Mercedes AMG GT"></div>
-                <div class="card-content"><h3>Mercedes AMG GT</h3><p>El Yapımı Motor.</p></div>
-                <div class="card-overlay">Detayları Gör</div>
+            <nav class="nav-menu" id="nav-menu">
+                <a href="#ana-sayfa" onclick="toggleMenu()">Yazılım Dalları</a>
+                <a href="#kod-arsivi" onclick="toggleMenu()">Kod Arşivi</a>
+                <a href="#quiz-area" onclick="toggleMenu()">Yolunu Çiz</a>
+                <a href="https://instagram.com/om3rfyc" target="_blank">İletişim</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <h1>Geleceğini Bugün İnşa Et</h1>
+            <p>Nereden başlayacağını bilmiyorsan doğru yerdesin. Türkiye'nin en kapsamlı yazılım rehberine hoş geldin. Hedefini belirle ve kodlamaya başla.</p>
+            <a href="#ana-sayfa" class="btn-main">Öğrenmeye Başla</a>
+        </section>
+
+        <main id="ana-sayfa">
+            <div class="section-header">
+                <h2 class="section-title">Yazılım Dalları</h2>
+                <p class="section-subtitle">BİR ALAN SEÇ VE DERİNLİKLERİNE İN</p>
             </div>
 
-            <div class="card" onclick="openCar('Audi R8 V10 Performance', 'Atmosferik V10 motorun efsanevi sesi ve Quattro güveni.', '620 HP', '3.1s', '331 KM/H')">
-                <div class="img-box"><img src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?w=800" alt="Audi R8"></div>
-                <div class="card-content"><h3>Audi R8 V10</h3><p>Atmosferik Güç.</p></div>
-                <div class="card-overlay">Detayları Gör</div>
-            </div>
-
-            <div class="card" onclick="openCar('Peugeot 508 PSE', 'Peugeot Sport Engineered tarafından geliştirilen 4x4 hibrit canavar.', '360 HP', '5.2s', '250 KM/H')">
-                <div class="img-box">
-                    <img src="https://www.carenthusiast.com/peugeot/peugeot__508__2024__011.jpg" alt="Peugeot 508 PSE New Model">
+            <div class="card-container">
+                <div class="card" onclick="openModal('aiModal')">
+                    <span class="icon">🧠</span>
+                    <h3>Yapay Zeka</h3>
+                    <p>Verileri anlayan, öğrenen ve geleceği tahmin eden sistemler geliştir.</p>
                 </div>
-                <div class="card-content"><h3>Peugeot 508 PSE</h3><p>Hibrit Performans.</p></div>
-                <div class="card-overlay">Detayları Gör</div>
+
+                <div class="card" onclick="openModal('siberModal')">
+                    <span class="icon">🛡️</span>
+                    <h3>Siber Güvenlik</h3>
+                    <p>Dijital dünyayı savun, açıkları keşfet ve etik hackerlığa başla.</p>
+                </div>
+
+                <div class="card" onclick="openModal('webModal')">
+                    <span class="icon">🌐</span>
+                    <h3>Web Geliştirici</h3>
+                    <p>Modern internetin hem yüzünü hem de beynini tasarla.</p>
+                </div>
+
+                <div class="card" onclick="openModal('appModal')">
+                    <span class="icon">📱</span>
+                    <h3>Uygulama Geliştirici</h3>
+                    <p>Mobil (iOS/Android) ve masaüstü sistemler için yazılım üret.</p>
+                </div>
+
+                <div class="card" onclick="openModal('robotModal')">
+                    <span class="icon">🤖</span>
+                    <h3>Robotik Kodlama</h3>
+                    <p>Donanımlara can ver, makinelerin dilini konuşmaya başla.</p>
+                </div>
+
+                <div class="card" onclick="openModal('toolModal')">
+                    <span class="icon">🛠️</span>
+                    <h3>Yazılım Toolları</h3>
+                    <p>Sektörde kullanılan profesyonel araçları ve görevlerini keşfet.</p>
+                </div>
+            </div>
+
+            <section id="kod-arsivi" style="margin-top: 100px; width: 100%;">
+                <div class="section-header">
+                    <h2 class="section-title">Kod Arşivi</h2>
+                    <p class="section-subtitle">HAZIR PROJELER VE SNIPPETLAR</p>
+                </div>
+                
+                <div class="archive-grid">
+                    <div class="archive-item">
+                        <h4>Python: Basit Makine Öğrenmesi (Scikit-learn)</h4>
+                        <div class="code-box">
+                            <button class="copy-btn">Kopyala</button>
+                            <pre>
+from sklearn import tree
+# Özellikler: [Ağırlık, Dokusu (1: Pürüzsüz, 0: Pürüzlü)]
+features = [[140, 1], [130, 1], [150, 0], [170, 0]]
+labels = [0, 0, 1, 1] # 0: Elma, 1: Portakal
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(features, labels)
+print(clf.predict([[160, 0]]))
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div class="archive-item">
+                        <h4>Python: Basit Yılan Oyunu (Pygame)</h4>
+                        <div class="code-box">
+                            <button class="copy-btn">Kopyala</button>
+                            <pre>
+import pygame
+import time
+import random
+
+pygame.init()
+white = (255, 255, 255)
+yellow = (255, 255, 102)
+black = (0, 0, 0)
+red = (213, 50, 80)
+green = (0, 255, 0)
+
+dis_width = 800
+dis_height = 600
+dis = pygame.display.set_mode((dis_width, dis_height))
+pygame.display.set_caption('Yılan Oyunu')
+
+# Oyun döngüsü ve yılan mantığı buraya eklenir...
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div class="archive-item">
+                        <h4>Python: Hesap Makinesi</h4>
+                        <div class="code-box">
+                            <button class="copy-btn">Kopyala</button>
+                            <pre>
+def topla(x, y): return x + y
+def cikar(x, y): return x - y
+def carp(x, y): return x * y
+def bol(x, y): return x / y
+
+print("İşlem Seçin:")
+print("1.Topla, 2.Çıkar, 3.Çarp, 4.Böl")
+
+secim = input("Seçiminiz (1/2/3/4):")
+sayi1 = float(input("1. Sayı: "))
+sayi2 = float(input("2. Sayı: "))
+
+if secim == '1': print(topla(sayi1, sayi2))
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="quiz-wrapper" id="quiz-area">
+                <div id="quiz-intro">
+                    <h3 style="font-size: 2.5rem; margin-bottom: 20px; text-transform: uppercase;">❓ Nereden Başlayacağını Bilmiyor Musun?</h3>
+                    <p style="color: #aaa; font-size: 1.2rem; margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">Hangi yazılım dalının senin kişiliğine, yeteneklerine ve beklentilerine uygun olduğunu öğrenmek için 1 dakikalık testimizi çöz.</p>
+                    <button class="btn-main" onclick="startQuiz()">Yolumu Çiz</button>
+                </div>
+
+                <div id="quiz-box" style="display: none; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+                    <p id="q-counter" style="color: #ff0000; margin-bottom: 10px; font-weight: bold;"></p>
+                    <h2 id="question-text" class="q-text">Soru Buraya Gelecek</h2>
+                    <div id="option-list" class="option-list"></div>
+                </div>
+
+                <div id="result-box">
+                    <h2 style="color: #ff0000; font-size: 2.5rem; margin-bottom: 15px;">Analiz Tamamlandı!</h2>
+                    <p style="font-size: 1.1rem; color: #888; margin-bottom: 25px;">Senin için en uygun yazılım dalı:</p>
+                    <div id="winner-name" style="font-size: 3rem; font-weight: 900; color: #fff; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 20px #ff0000;">---</div>
+                    <p id="winner-desc" style="font-size: 1.2rem; color: #ccc; margin-bottom: 40px; line-height: 1.6;"></p>
+                    <button class="btn-main" onclick="location.reload()">Tekrar Çöz</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="aiModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('aiModal')">&times;</span>
+            <h2 class="modal-h2">🧠 YAPAY ZEKA VE VERİ BİLİMİ</h2>
+            <div class="info-grid">
+                <div class="info-item"><h4>Ne İş Yaparlar?</h4><p>Algoritmalar aracılığıyla veriden anlam çıkarır, tahminleme yapar ve konuşan/gören akıllı sistemler kurarlar.</p></div>
+                <div class="info-item"><h4>Kime Hizmet Ederler?</h4><p>Teknoloji devleri (Google, OpenAI), Sağlık sektörü, Finans ve Otonom araç şirketleri.</p></div>
+                <div class="info-item"><h4>Maaş Skalası</h4><p>Başlangıç 50k+. Dünyada en hızlı yükselen ve en yüksek tavan maaşa sahip olan alandır (Yıllık 150k$+).</p></div>
+                <div class="info-item"><h4>Temel Amaç</h4><p>Karmaşık problemleri insan zekasını taklit eden matematiksel modellerle çözmek.</p></div>
+            </div>
+            <div class="lang-section">
+                <h4>Kullanılan Ana Diller & Kütüphaneler</h4>
+                <div class="tags"><span>Python</span><span>R</span><span>TensorFlow</span><span>PyTorch</span><span>C++</span><span>SQL</span></div>
             </div>
         </div>
     </div>
 
-    <div id="aboutModal" class="modal">
-        <div class="modal-box">
-            <span class="close-btn" onclick="closeAll()">&times;</span>
-            <h2 style="color: var(--primary); margin-bottom: 15px;">HAKKIMIZDA</h2>
-            <p>Ben Ömer, bu site hala gelişme aşamasında. Bize fikir sunmak için <b>@om3rfyc</b> hesabına yazabilirsiniz.</p>
-        </div>
-    </div>
-
-    <div id="carModal" class="modal">
-        <div class="modal-box">
-            <span class="close-btn" onclick="closeAll()">&times;</span>
-            <h2 id="modalTitle" style="color: var(--primary); margin-bottom: 10px;"></h2>
-            <p id="modalDesc" style="font-size: 0.95rem; margin-bottom: 20px;"></p>
-            <div class="info-stat">
-                <div class="stat-item"><span id="statPower"></span><label>Güç</label></div>
-                <div class="stat-item"><span id="statZero"></span><label>0-100</label></div>
-                <div class="stat-item"><span id="statSpeed"></span><label>Max Hız</label></div>
+    <div id="siberModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('siberModal')">&times;</span>
+            <h2 class="modal-h2">🛡️ SİBER GÜVENLİK DÜNYASI</h2>
+            <div class="info-grid">
+                <div class="info-item"><h4>Ne İş Yaparlar?</h4><p>Sistemlerdeki zafiyetleri tespit eder, ağ güvenliğini sağlar ve saldırılara karşı dijital savunma hattı oluştururlar.</p></div>
+                <div class="info-item"><h4>Kime Hizmet Ederler?</h4><p>Bankalar, savunma sanayii, devlet kurumları ve verisini korumak isteyen tüm global şirketler.</p></div>
+                <div class="info-item"><h4>Maaş Skalası</h4><p>Türkiye'de başlangıç 40k+, kıdemli 140k+. Globalde yıllık 100.000$ - 200.000$ arası kazançlar yaygındır.</p></div>
+                <div class="info-item"><h4>Temel Amaç</h4><p>Bilgi gizliliğini (Confidentiality) ve sistem bütünlüğünü kötü niyetli saldırılardan korumak.</p></div>
+            </div>
+            <div class="lang-section">
+                <h4>Kullanılan Ana Diller & Araçlar</h4>
+                <div class="tags"><span>Python</span><span>Bash</span><span>C++</span><span>SQL</span><span>PowerShell</span></div>
+                <p style="margin-top:20px; color:#666;">Araçlar: Kali Linux, Metasploit, Nmap, Wireshark, Burp Suite.</p>
             </div>
         </div>
     </div>
 
-    <div id="contactModal" class="modal">
-        <div class="modal-box">
-            <span class="close-btn" onclick="closeAll()">&times;</span>
-            <h2>İLETİŞİM</h2>
-            <a href="https://instagram.com/om3rfyc" target="_blank" style="display:block; background:#1a1a1a; color:#fff; padding:15px; margin-top:20px; text-decoration:none; border-radius:15px;">@om3rfyc</a>
+    <div id="webModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('webModal')">&times;</span>
+            <h2 class="modal-h2">🌐 WEB GELİŞTİRİCİ (FULLSTACK)</h2>
+            <div class="info-grid">
+                <div class="info-item"><h4>Ne İş Yaparlar?</h4><p>İnternet tarayıcıları üzerinden erişilen siteleri ve web tabanlı devasa sistemleri kodlarlar.</p></div>
+                <div class="info-item"><h4>Hizmet Alanı</h4><p>E-ticaret platformları, sosyal medya siteleri, SaaS girişimleri ve her türlü dijital ajanslar.</p></div>
+                <div class="info-item"><h4>Maaş Skalası</h4><p>Başlangıç 35k-45k. Kıdemli seviyede 120k+ ve döviz bazlı freelance çalışma imkanı en yüksek alandır.</p></div>
+                <div class="info-item"><h4>Temel Amaç</h4><p>Hızlı, estetik ve kullanıcı odaklı dijital platformlar inşa etmek.</p></div>
+            </div>
+            <div class="lang-section">
+                <h4>Kullanılan Ana Diller & Teknolojiler</h4>
+                <div class="tags"><span>HTML/CSS</span><span>JavaScript</span><span>React</span><span>Node.js</span><span>PHP</span><span>MongoDB</span></div>
+            </div>
         </div>
     </div>
 
-    <footer>&copy; 2026 ÖMER SELECT GARAGE</footer>
+    <div id="appModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('appModal')">&times;</span>
+            <h2 class="modal-h2">📱 UYGULAMA GELİŞTİRİCİ</h2>
+            <div class="info-grid">
+                <div class="info-item"><h4>Ne İş Yaparlar?</h4><p>Akıllı telefonlarda, tabletlerde ve masaüstü bilgisayarlarda çalışan uygulamaları geliştirirler.</p></div>
+                <div class="info-item"><h4>Kime Hizmet Ederler?</h4><p>Mobil oyun stüdyoları, bankacılık sektörü ve uygulama marketleri üzerinden son kullanıcıya.</p></div>
+                <div class="info-item"><h4>Maaş Skalası</h4><p>Başlangıç 40k+. Kıdemli uzmanlar Türkiye'de 130k+, globalde ise 120.000$+ bandında kazanır.</p></div>
+                <div class="info-item"><h4>Temel Amaç</h4><p>Cihazların donanımsal özelliklerini kullanarak hayatı kolaylaştıran çözümler sunmak.</p></div>
+            </div>
+            <div class="lang-section">
+                <h4>Diller & Frameworkler</h4>
+                <div class="tags"><span>Swift (iOS)</span><span>Kotlin (Android)</span><span>Dart (Flutter)</span><span>C# (Unity)</span><span>Java</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="robotModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('robotModal')">&times;</span>
+            <h2 class="modal-h2">🤖 ROBOTİK VE GÖMÜLÜ SİSTEMLER</h2>
+            <div class="info-grid">
+                <div class="info-item"><h4>Ne İş Yaparlar?</h4><p>Yazılımı fiziksel donanımlla buluştururlar. Otomobiller, beyaz eşyalar ve robotik kollar için kod yazarlar.</p></div>
+                <div class="info-item"><h4>Hizmet Alanı</h4><p>Otomotiv (Tesla/TOGG), Savunma (İHA/SİHA), Uzay Teknolojileri ve Endüstriyel Fabrikalar.</p></div>
+                <div class="info-item"><h4>Maaş Skalası</h4><p>Başlangıç 45k+. Ar-ge merkezlerinde kıdemli uzman maaşları 150k TL ve üzerine rahatlıkla çıkar.</p></div>
+                <div class="info-item"><h4>Temel Amaç</h4><p>Makinelere zeka kazandırmak ve otonom sistemler üretmek.</p></div>
+            </div>
+            <div class="lang-section">
+                <h4>Diller & Donanımlar</h4>
+                <div class="tags"><span>C++</span><span>C</span><span>Python</span><span>Assembly</span><span>Rust</span><span>Arduino/Pi</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toolModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('toolModal')">&times;</span>
+            <h2 class="modal-h2">🛠️ YAZILIM & GÜVENLİK ARAÇLARI</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h4>Nmap</h4>
+                    <p>Ağ tarama ve zafiyet tespiti için kullanılır. Hedef sistemdeki açık portları ve servisleri listeler.</p>
+                </div>
+                <div class="info-item">
+                    <h4>SQLmap</h4>
+                    <p>Veritabanı enjeksiyon (SQL Injection) açıklarını tespit etmek ve sömürmek için kullanılan otomatik bir araçtır.</p>
+                </div>
+                <div class="info-item">
+                    <h4>John the Ripper</h4>
+                    <p>Hızlı ve etkili bir şifre kırma (password cracking) aracıdır. Hashlenmiş şifreleri çözmek için kullanılır.</p>
+                </div>
+                <div class="info-item">
+                    <h4>Metasploit</h4>
+                    <p>Siber güvenlik uzmanlarının sistemlerdeki açıkları test etmesi ve exploit etmesi için kullanılan devasa bir frameworktür.</p>
+                </div>
+                <div class="info-item">
+                    <h4>Wireshark</h4>
+                    <p>Ağ trafiğini anlık olarak izlemeyi (packet sniffing) ve verileri analiz etmeyi sağlar.</p>
+                </div>
+                <div class="info-item">
+                    <h4>Git & GitHub</h4>
+                    <p>Kod versiyon kontrol sistemidir. Yazılımcıların projelerini yedeklemesini ve ekipçe çalışmasını sağlar.</p>
+                </div>
+            </div>
+            <div class="lang-section">
+                <h4>Popüler Kategoriler</h4>
+                <div class="tags"><span>Pentest</span><span>Forensics</span><span>Networking</span><span>DevOps</span><span>Database</span></div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        function openAbout() { document.getElementById('aboutModal').style.display = 'flex'; }
-        function openContact() { document.getElementById('contactModal').style.display = 'flex'; }
-        
-        function openCar(name, desc, power, zero, speed) {
-            document.getElementById('modalTitle').innerText = name;
-            document.getElementById('modalDesc').innerText = desc;
-            document.getElementById('statPower').innerText = power;
-            document.getElementById('statZero').innerText = zero;
-            document.getElementById('statSpeed').innerText = speed;
-            document.getElementById('carModal').style.display = 'flex';
+        // --- MENÜ KONTROL ---
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            const hamburger = document.getElementById('hamburger');
+            menu.classList.toggle('active');
+            hamburger.classList.toggle('active');
         }
 
-        function closeAll() {
-            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        // MODAL FONKSİYONLARI
+        function openModal(id) {
+            document.getElementById(id).style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+            document.body.style.overflow = "auto";
         }
 
-        window.onclick = function(e) {
-            if (e.target.className === 'modal') closeAll();
+        // --- YOLUMU ÇİZ (QUIZ) SİSTEMİ ---
+        const questions = [
+            {
+                q: "Bilgisayarda vaktini en çok ne yaparak geçirmekten keyif alırsın?",
+                options: [
+                    { t: "Bir şeylerin nasıl çalıştığını bulmak, kurcalamak ve açık aramak.", s: "siber" },
+                    { t: "Karmaşık verilerden sonuçlar çıkarmak ve tahminler yapmak.", s: "ai" },
+                    { t: "İnternette dolaşırken 'Bunu ben nasıl yaparım?' diye düşünmek.", s: "web" },
+                    { t: "Telefondaki uygulamaların hızı ve tasarımı üzerine kafa yormak.", s: "app" },
+                    { t: "Donanımları söküp takmak, bir parçayı hareket ettirmek.", s: "robot" }
+                ]
+            },
+            {
+                q: "Seni en çok hangi renkler ve ortam heyecanlandırır?",
+                options: [
+                    { t: "Siyah bir ekran ve akan yeşil/kırmızı terminal kodları.", s: "siber" },
+                    { t: "Matematiksel grafikler, veri kümeleri ve temiz algoritmalar.", s: "ai" },
+                    { t: "Düzenli, estetik ve renk uyumu olan şık web sayfaları.", s: "web" },
+                    { t: "Hızlı, akıcı ve her an cebinde olan uygulamalar.", s: "app" },
+                    { t: "Kablolar, sensörler ve mekanik parçaların dünyası.", s: "robot" }
+                ]
+            },
+            {
+                q: "Bir yazılımcı olarak gelecekteki en büyük hayalin nedir?",
+                options: [
+                    { t: "Dünyanın en güvenli ağını kurmak veya siber saldırıları durdurmak.", s: "siber" },
+                    { t: "İnsan gibi düşünebilen bir zeka veya ChatGPT benzeri bir sistem yazmak.", s: "ai" },
+                    { t: "Milyonlarca kişinin kullandığı bir sosyal ağ veya platform kurmak.", s: "web" },
+                    { t: "Herkesin telefonunda yüklü olan o popüler uygulamayı yazmak.", s: "app" },
+                    { t: "Kendi kendine giden bir araç veya akıllı bir robot üretmek.", s: "robot" }
+                ]
+            },
+            {
+                q: "Hangi sorunla uğraşırken daha az sıkılırsın?",
+                options: [
+                    { t: "Bir şifreyi kırmaya veya bir sistem açığını bulmaya çalışırken.", s: "siber" },
+                    { t: "Bir modelin neden yanlış tahmin yaptığını analiz ederken.", s: "ai" },
+                    { t: "Bir sayfanın tasarımındaki kaymayı veya veri hatasını düzeltirken.", s: "web" },
+                    { t: "Uygulamanın performansını ve kullanıcı deneyimini iyileştirirken.", s: "app" },
+                    { t: "Bir motorun neden dönmediğini veya sensör hatasını ararken.", s: "robot" }
+                ]
+            }
+        ];
+
+        let curQ = 0;
+        let points = { siber: 0, ai: 0, web: 0, app: 0, robot: 0 };
+
+        function startQuiz() {
+            document.getElementById('quiz-intro').style.display = 'none';
+            document.getElementById('quiz-box').style.display = 'block';
+            showQ();
+        }
+
+        function showQ() {
+            let q = questions[curQ];
+            document.getElementById('q-counter').innerText = `Soru ${curQ + 1} / ${questions.length}`;
+            document.getElementById('question-text').innerText = q.q;
+            let list = document.getElementById('option-list');
+            list.innerHTML = "";
+            q.options.forEach(opt => {
+                let div = document.createElement('div');
+                div.className = "option-item";
+                div.innerText = opt.t;
+                div.onclick = () => {
+                    points[opt.s]++;
+                    curQ++;
+                    if(curQ < questions.length) showQ(); else showResult();
+                };
+                list.appendChild(div);
+            });
+        }
+
+        function showResult() {
+            document.getElementById('quiz-box').style.display = 'none';
+            document.getElementById('result-box').style.display = 'block';
+            let winner = Object.keys(points).reduce((a, b) => points[a] > points[b] ? a : b);
+            let data = {
+                ai: { n: "Yapay Zeka Uzmanı", d: "Geleceğin dünyasını sen kuracaksın! Verileri anlama yeteneğin ve mantıksal zekan seni mükemmel bir AI geliştiricisi yapıyor." },
+                siber: { n: "Siber Güvenlik Uzmanı", d: "Sen tam bir dijital koruyucusun! Karmaşık sistemleri çözmek, açıkları bulmak ve siber dünyayı savunmak senin hamurunda var." },
+                web: { n: "Web Geliştiricisi", d: "İnternetin mimarı sensin! Modern dünyada her şey web üzerinde dönerken, sen bu platformları inşa edecek kişisin." },
+                app: { n: "Uygulama Geliştiricisi", d: "Kullanıcı deneyimi uzmanı! İnsanların ceplerindeki teknolojiye hükmetmek ve mobil geleceği yazmak tam sana göre." },
+                robot: { n: "Robotik Mühendisi", d: "Makinelere can veren kişi! Kodların sadece ekranda kalmasını değil, fiziksel dünyada hareket etmesini seviyorsun." }
+            };
+            document.getElementById('winner-name').innerText = data[winner].n;
+            document.getElementById('winner-desc').innerText = data[winner].d;
         }
     </script>
 </body>
